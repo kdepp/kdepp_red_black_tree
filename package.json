@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "should": "^6.0.3",
-    "sinon": "^1.14.1"
+    "sinon": "^1.14.1",
+    "js-beautify": "^1.5.5"
   }
 }
