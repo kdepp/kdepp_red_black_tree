@@ -9,7 +9,22 @@ beautify = require('js-beautify').js_beautify
 json_log = (json) -> console.log beautify(JSON.stringify(json))
 node_log = (node) -> json_log remove_parent(node)
 
+remove_cache = {}
 
+remove_parent = (node) ->
+    node.left?.parent = undefined
+    node.right?.parent = undefined
+
+    remove_cache[node.value] = 1 + (remove_cache[node.value] || 0)
+    #console.log remove_cache
+
+    if node.left
+        remove_parent node.left
+
+    if node.right
+        remove_parent node.right
+
+    node
 
 {BLACK, RED} = Rbt
 
