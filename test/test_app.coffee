@@ -187,3 +187,128 @@ describe "red black tree", () ->
                 ret.parent.value.should.equal 80
 
 
+        describe.skip "#4, 7, 12, 15, 3, 5, 14, 18, 16, 17", () ->
+            tree = new Rbt
+
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+
+            it "d", () ->
+                true.should.equal true
+
+
+    describe "#removeal", () ->
+        
+        describe "#remove 3, simple remove", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            ret = tree.search 4
+        
+            it "#4's left is leaf", () ->
+                Rbt.check_leaf(ret.left).should.equal true
+
+            it "#4's right is still 5", () ->
+                ret.right.value.should.equal 5
+            
+            it "#4's parent is still 7", () ->
+                ret.parent.value.should.equal 7
+
+            it "#7's left is still 4", () ->
+                #console.log(require('util').inspect((tree.search 7), true, 10))
+                (tree.search 7).left.value.should.equal 4
+
+
+        describe "#remove 12, restructing, sibling has on red child", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            ret = tree.search 5
+
+            it "#5's color is red, its parent is 14", () ->
+                ret.color.should.equal RED
+                ret.parent.value.should.equal 14
+
+            it "#5's left is 4 and it's black", () ->
+                ret.left.value.should.equal 4
+                ret.left.color.should.equal BLACK
+            
+            it "#5's right is 4 and it's black", () ->
+                ret.right.value.should.equal 7
+                ret.right.color.should.equal BLACK
+        
+        describe "#remove 17, simple remove", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            tree.remove 17
+            ret = tree.search 18
+
+            it "#18's both children is leaf, and its parent is still 16, red", () ->
+                (Rbt.check_leaf ret.left).should.equal true
+                (Rbt.check_leaf ret.right).should.equal true
+                ret.parent.value.should.equal 16
+                ret.parent.color.should.equal RED
+
+        describe "#remove 18, recoloring", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            tree.remove 17
+            tree.remove 18
+            ret = tree.search 16
+
+            it "#16 changed to black, and its parent is still 14", () ->
+                ret.color.should.equal BLACK
+                ret.parent.value.should.equal 14
+
+            it "#16'sleft is still 15, but changed to RED", () ->
+                ret.left.value.should.equal 15
+                ret.left.color.should.equal RED
+
+        describe "#remove 15, simple remove", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            tree.remove 17
+            tree.remove 18
+            tree.remove 15
+            ret = tree.search 16
+
+            it "#16's both children is leaf, and its parent is still 16, red", () ->
+                (Rbt.check_leaf ret.left).should.equal true
+                (Rbt.check_leaf ret.right).should.equal true
+                ret.parent.value.should.equal 14
+                ret.parent.color.should.equal BLACK
+
+        describe "#remove 16, recoloring", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            tree.remove 17
+            tree.remove 18
+            tree.remove 15
+            tree.remove 16
+            ret = tree.search 16
+
+            it "#root is 5", () ->
+                tree.root.value.should.equal 5
+                tree.root.color.should.equal BLACK
+
+            it "#root's left is 4", () ->
+                tree.root.left.value.should.equal 4
+                tree.root.left.color.should.equal BLACK
+
+            it "#root's right is 14", () ->
+                tree.root.right.value.should.equal 14
+                tree.root.right.color.should.equal BLACK
+
+            it "#14's left is 7, right is leaf", () ->
+                tree.root.right.left.value.should.equal 7
+                tree.root.right.left.color.should.equal RED
+                (Rbt.check_leaf tree.root.right.right).should.equal true
+
