@@ -284,7 +284,7 @@ describe "red black tree", () ->
                 ret.parent.value.should.equal 14
                 ret.parent.color.should.equal BLACK
 
-        describe "#remove 16, recoloring", () ->
+        describe "#remove 16, adjustment and recoloring", () ->
             tree = new Rbt
             _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
             tree.remove 3
@@ -311,4 +311,27 @@ describe "red black tree", () ->
                 tree.root.right.left.value.should.equal 7
                 tree.root.right.left.color.should.equal RED
                 (Rbt.check_leaf tree.root.right.right).should.equal true
+
+        describe "#remove 5, restructing", () ->
+            tree = new Rbt
+            _.each [4, 7, 12, 15, 3, 5, 14, 18, 16, 17].slice(0, 10), (x) -> tree.add x
+            tree.remove 3
+            tree.remove 12
+            tree.remove 17
+            tree.remove 18
+            tree.remove 15
+            tree.remove 16
+            tree.remove 5
+
+            it "#root is 7", () ->
+                tree.root.value.should.equal 7
+                tree.root.color.should.equal BLACK
+
+            it "#root's left is 4", () ->
+                tree.root.left.value.should.equal 4
+                tree.root.left.color.should.equal BLACK
+
+            it "#root's right is 14", () ->
+                tree.root.right.value.should.equal 14
+                tree.root.right.color.should.equal BLACK
 
